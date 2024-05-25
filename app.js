@@ -1,7 +1,8 @@
 const express = require('express')
 const app = express()
+const cors = require('cors')
 // local port 
-const port = 9000
+const port =process.env.PORT ||9000
 
 
 // ------Mongo Db connection config--------
@@ -22,6 +23,14 @@ mongoose.connect(MONGODB_URL)
 
 
 app.use(express.json());
+app.use(cors(
+    {
+        origin:"http://localhost:5173",
+        methods:["POST","GET","PUT","DELETE"],
+        allowedHeaders: "Content-Type"
+    }
+))
+
 
 // app router
 app.use(require('./Routes/RegisgerRoute'))
