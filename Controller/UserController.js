@@ -25,6 +25,7 @@ exports.addNewUser = [async (req,res)=>{
 }]
 
 // User login
+
 exports.userLogin = [async (req, res)=>{
     try{
         
@@ -66,9 +67,41 @@ exports.userLogin = [async (req, res)=>{
 
 exports.viewList =[async (req,res)=>{
 
-    User.find()
+    await User.find()
     .then((users)=>{
         return res.status(200).send(users)
+    })
+    .catch((err)=>{
+        return res.status(200).send(err.message)
+    })
+}]
+
+// Update a User
+exports.updateUser=[async (req,res)=>{
+    await User.findByIdAndUpdate(req.params.id, {$set:{
+        username: req.body.username,
+        mobileNo: req.body.mobileNo,
+        email: req.body.email,
+        password: await bcrypt.hash(req.body.password, 8),
+        role: req.body.role
+    }},{new: true} )
+    .then((updatedUser)=>{
+        return res.status(200).send(updatedUser)
+    })
+    .catch((err)=>{
+        return res.status(200).send(err.message)
+    })
+}]
+
+// Delete a user
+
+exports.deleteuser=[async (req,res)=>{
+
+    const id = req.params.id;
+
+    await User.deleteOne({_id: id})
+    .then(()=>{
+        return rs.status(200).send("User deleted successfully")
     })
     .catch((err)=>{
         return res.status(200).send(err.message)

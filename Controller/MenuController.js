@@ -1,3 +1,4 @@
+const { now } = require('mongoose');
 const Menu = require('../Models/MenuModel')
 
 
@@ -15,7 +16,6 @@ exports.addNewMenu=[async (req,res)=>{
 
     newMenu.save()
     .then((response)=>{
-        console.log(response);
         return res.status(201).send(response);
     })
     .catch((err)=>{
@@ -24,6 +24,43 @@ exports.addNewMenu=[async (req,res)=>{
 }]
 
 
+// View menu items
+
+exports.viewMenuItems=[async (req,res)=>{
+
+    Menu.find()
+    .then((items)=>{
+        return res.status(200).send(items)
+    })
+    .catch((err)=>{
+        return res.status(200).send(err.message)
+    })
+
+}]
+
+// Update menu items
+
+exports.updateMenuItem=[(req,res)=>{
+    const id = req.params.id;
+    Menu.findByIdAndUpdate(id,  {$set: {
+        name: req.body.name,
+        decription: req.body.decription,
+        price: req.body.price,
+        rating: req.body.rating,
+        deliveryTime: req.body.deliveryTime,
+        offer: req.body.offer,
+        type: req.body.type
+    }},{new: true} )
+    .then((item)=>{
+        return res.status(200).send(item)
+    })
+    .catch((err)=>{
+        return res.status(200).semd(err.message)
+    })
+
+
+
+}]
 
 // Delete menu item
 

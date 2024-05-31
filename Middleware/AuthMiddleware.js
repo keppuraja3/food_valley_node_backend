@@ -8,7 +8,7 @@ function verifyToken(req, res, next) {
         return res.status(401).json({ error: 'Access denied' });
 
     try {  // Verifying the key of the user
-        const decoded = jwt.verify(token, 'food-valley-user-id');
+        const decoded = jwt.verify(token, 'food-valley-user-token');
         req.userId = decoded.userId;
         next();
     } 
