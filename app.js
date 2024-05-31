@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
-const cors = require('cors')
+const cors = require('cors');
+const dotenv = require('dotenv')
+dotenv.config();
 // local port 
 const port =process.env.PORT ||9000
 
@@ -9,11 +11,9 @@ const port =process.env.PORT ||9000
 
 const mongoose = require('mongoose')
 
-const MONGODB_URL = 'mongodb://localhost:27017/FoodValley'
-
-mongoose.connect(MONGODB_URL)
+mongoose.connect(process.env.MONGODB_URL)
 .then(()=>{
-    console.log(`MongoDb:  ${MONGODB_URL} is connected successfully`);
+    console.log(`MongoDb:  ${process.env.MONGODB_URL} is connected successfully`);
 })
 .catch((err)=>{
     console.error("Error in mongoDb connection ",err.message);
@@ -31,9 +31,12 @@ app.use(cors(
     }
 ))
 
+const UserRoute = require('./Routes/UserRoute')
+const MenuRoute = require('./Routes/MenuRoute')
 
 // app router
-app.use(require('./Routes/RegisgerRoute'))
+app.use(UserRoute);
+app.use(MenuRoute);
 
 // Listening port
 
