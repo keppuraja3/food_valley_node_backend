@@ -4,7 +4,8 @@ const jwt = require('jsonwebtoken')
 
 
 
-// New user registration 
+// New user registration
+
 exports.addNewUser = [async (req,res)=>{
     const newUser = new User({
         username: req.body.username,
@@ -77,6 +78,7 @@ exports.viewList =[async (req,res)=>{
 }]
 
 // Update a User
+
 exports.updateUser=[async (req,res)=>{
     await User.findByIdAndUpdate(req.params.id, {$set:{
         username: req.body.username,

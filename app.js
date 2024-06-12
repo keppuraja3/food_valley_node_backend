@@ -13,14 +13,14 @@ const mongoose = require('mongoose')
 
 mongoose.connect(process.env.MONGODB_URL)
 .then(()=>{
-    console.log(`MongoDb:  ${process.env.MONGODB_URL} is connected successfully`);
+    console.log(`MongoDb: Database is connected successfully`);
 })
 .catch((err)=>{
     console.error("Error in mongoDb connection ",err.message);
 })
 
-// ------Mongo Db connection config--------
 
+// ------express--------
 
 app.use(express.json());
 app.use(cors(
