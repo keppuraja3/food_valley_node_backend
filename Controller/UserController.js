@@ -2,8 +2,6 @@ const User = require('../Models/UserModel')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-
-
 // New user registration
 
 exports.addNewUser = [async (req,res)=>{
@@ -35,7 +33,7 @@ exports.userLogin = [async (req, res)=>{
         const user = await User.findOne({mobileNo})
         
         if(!user){
-            return res.status(401).json({error: 'Enter valid user details'})
+            return res.status(401).json({error: 'User is not registered'})
         }
 
         // comparing the password 
@@ -52,11 +50,19 @@ exports.userLogin = [async (req, res)=>{
             email: user.email,
             mobileNo: user.mobileNo,
             role: user.role
-        },'food-valley-user-token',{
+        },process.env.SECRET_KEY,{
             expiresIn: '1h',
         });
-        // Sending token
-        res.status(200).json({token});
+
+         // Sending token as cookie
+         res.cookie('token', token, {
+            maxAge: 1000 * 60 * 60, // 1 hour
+            httpOnly: true, // Cookie cannot be accessed via client-side scripts
+            secure: false, // Set to true if you are using HTTPS
+            sameSite: 'strict' // Cookie will be sent only to the same site
+        });
+
+        res.status(200).json({status: true, token: token ,role: user.role, message: "Login successfully"});
 
     }catch(err){
         if (err) throw err
@@ -108,4 +114,10 @@ exports.deleteuser=[async (req,res)=>{
     .catch((err)=>{
         return res.status(200).send(err.message)
     })
+}]
+
+// Verifying user 
+
+exports.authVeryify=[async (req, res)=>{
+    return res.json({status: true, message:"authorized"})
 }]

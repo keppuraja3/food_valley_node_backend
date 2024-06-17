@@ -1,17 +1,26 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const MenuController = require('../Controller/MenuController')
+const MenuController = require("../Controller/MenuController");
+const uploader = require("../helper/helper");
 
 // crete item
-router.post('/menu/create',MenuController.addNewMenu)
+router.post(
+  "/menu/create",
+  uploader.single("menuimage"),
+  MenuController.addNewMenu
+);
 
 // View all items
-router.get('/menu/view', MenuController.viewMenuItems)
+router.get("/menu/view", MenuController.viewMenuItems);
 
 // Update item
-router.put('/menu/update/:id', MenuController.updateMenuItem)
+router.put(
+  "/menu/update/:id",
+  uploader.single("menuimage"),
+  MenuController.updateMenuItem
+);
 
 // Delete item
-router.delete('/menu/delete/:id', MenuController.deleteMenuItem)
+router.delete("/menu/delete/:id", MenuController.deleteMenuItem);
 
-module.exports = router
+module.exports = router;

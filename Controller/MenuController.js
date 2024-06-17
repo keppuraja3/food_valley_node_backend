@@ -1,76 +1,101 @@
-const { now } = require('mongoose');
-const Menu = require('../Models/MenuModel')
-
+const { now } = require("mongoose");
+const Menu = require("../Models/MenuModel");
 
 // Add new menu item
-exports.addNewMenu=[async (req,res)=>{
-    const newMenu = new Menu({
-        name: req.body.name,
-        decription: req.body.decription,
-        price: req.body.price,
-        rating: req.body.rating,
-        deliveryTime: req.body.deliveryTime,
-        offer: req.body.offer,
-        type: req.body.type
-    })
+exports.addNewMenu = [
+  async (req, res) => {
+    let image;
 
-    newMenu.save()
-    .then((response)=>{
-        return res.status(201).send(response);
-    })
-    .catch((err)=>{
-        console.log(err);
-    })
-}]
+    if (req.file) {
+      image = `${req.protocol}://${req.get("host")}/uploads/images/${
+        req.file.originalname
+      }`;
+    }
 
+    // console.log("image 1---", image);
+
+    const data = JSON.parse(req.body.data);
+
+    const { name, description, price, rating, deliveryTime, offer, type } =
+      data;
+
+    try {
+      const newMenu = new Menu({
+        name,
+        description,
+        price,
+        rating,
+        deliveryTime,
+        offer,
+        type,
+        image,
+      });
+
+      const product = await newMenu.save();
+      res.status(201).json({
+        success: true,
+        product,
+      });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  },
+];
 
 // View menu items
-
-exports.viewMenuItems=[async (req,res)=>{
-
+exports.viewMenuItems = [
+  async (req, res) => {
     Menu.find()
-    .then((items)=>{
-        return res.status(200).send(items)
-    })
-    .catch((err)=>{
-        return res.status(200).send(err.message)
-    })
-
-}]
+      .then((items) => {
+        return res.status(200).send(items);
+      })
+      .catch((err) => {
+        return res.status(200).send(err.message);
+      });
+  },
+];
 
 // Update menu items
-
-exports.updateMenuItem=[(req,res)=>{
+exports.updateMenuItem = [
+  async (req, res) => {
     const id = req.params.id;
-    Menu.findByIdAndUpdate(id,  {$set: {
-        name: req.body.name,
-        decription: req.body.decription,
-        price: req.body.price,
-        rating: req.body.rating,
-        deliveryTime: req.body.deliveryTime,
-        offer: req.body.offer,
-        type: req.body.type
-    }},{new: true} )
-    .then((item)=>{
-        return res.status(200).send(item)
-    })
-    .catch((err)=>{
-        return res.status(200).semd(err.message)
-    })
 
+    const data = JSON.parse(req.body.data);
+    console.log("data------", data);
+    try {
+      const updatedItem = await Menu.findByIdAndUpdate(
+        id,
+        {
+          $set: {
+            name: data.name,
+            description: data.description,
+            price: data.price,
+            rating: data.rating,
+            deliveryTime: data.deliveryTime,
+            offer: data.offer,
+            type: data.type,
+          },
+        },
+        { new: true }
+      );
 
-
-}]
+      res.status(200).json(updatedItem);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+      console.log(err);
+    }
+  },
+];
 
 // Delete menu item
-
-exports.deleteMenuItem=[async (req,res)=>{
+exports.deleteMenuItem = [
+  async (req, res) => {
     const id = req.params.id;
-    await Menu.deleteOne({_id: id})
-    .then(()=>{
-        return res.status(200).send("Item deleted successfully")
-    })
-    .catch((err)=>{
-        return res.status(200).send(err.message)
-    })
-}]
+    try {
+      await Menu.deleteOne({ _id: id });
+      res.status(200).send("Item deleted successfully");
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  },
+];
