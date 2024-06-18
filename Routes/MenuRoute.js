@@ -4,23 +4,19 @@ const MenuController = require("../Controller/MenuController");
 const uploader = require("../helper/helper");
 
 // crete item
-router.post(
-  "/menu/create",
-  uploader.single("menuimage"),
-  MenuController.addNewMenu
-);
+router.post("/menu", uploader.single("menuimage"), MenuController.addNewMenu);
 
 // View all items
-router.get("/menu/view", MenuController.viewMenuItems);
+router.get("/menu", MenuController.viewMenuItems);
 
 // Update item
 router.put(
-  "/menu/update/:id",
+  "/menu/:id",
   uploader.single("menuimage"),
   MenuController.updateMenuItem
 );
 
 // Delete item
-router.delete("/menu/delete/:id", MenuController.deleteMenuItem);
+router.delete("/menu/:id", MenuController.deleteMenuItem);
 
 module.exports = router;

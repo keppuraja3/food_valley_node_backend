@@ -1,4 +1,3 @@
-const { now } = require("mongoose");
 const Menu = require("../Models/MenuModel");
 
 // Add new menu item
@@ -12,10 +11,8 @@ exports.addNewMenu = [
       }`;
     }
 
-    // console.log("image 1---", image);
-
     const data = JSON.parse(req.body.data);
-
+    // console.log("data-----", data);
     const { name, description, price, rating, deliveryTime, offer, type } =
       data;
 
@@ -31,13 +28,15 @@ exports.addNewMenu = [
         image,
       });
 
-      const product = await newMenu.save();
-      res.status(201).json({
+      const menus = await newMenu.save();
+
+      return res.status(201).json({
         success: true,
-        product,
+        menus,
+        message: "Menu added successfully",
       });
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      return res.status(500).json({ error: err.message });
     }
   },
 ];
@@ -93,7 +92,7 @@ exports.deleteMenuItem = [
     const id = req.params.id;
     try {
       await Menu.deleteOne({ _id: id });
-      res.status(200).send("Item deleted successfully");
+      res.status(200).json({ message: "Item deleted successfully" });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
