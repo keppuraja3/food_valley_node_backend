@@ -6,10 +6,9 @@ exports.addNewMenu = [
     let image;
 
     if (req.file) {
-      image = `${req.protocol}://${req.get("host")}/uploads/images/${
-        req.file.originalname
-      }`;
+      image = `${process.env.SERVER_URL}/uploads/images/${req.file.originalname}`;
     }
+    console.log("Request--------", req);
 
     const data = JSON.parse(req.body.data);
     // console.log("data-----", data);
@@ -58,7 +57,11 @@ exports.viewMenuItems = [
 exports.updateMenuItem = [
   async (req, res) => {
     const id = req.params.id;
+    let image;
 
+    if (req.file) {
+      image = `${process.env.SERVER_URL}/uploads/images/${req.file.originalname}`;
+    }
     const data = JSON.parse(req.body.data);
     console.log("data------", data);
     try {
@@ -73,12 +76,17 @@ exports.updateMenuItem = [
             deliveryTime: data.deliveryTime,
             offer: data.offer,
             type: data.type,
+            image,
           },
         },
         { new: true }
       );
 
-      res.status(200).json(updatedItem);
+      res.status(200).json({
+        status: true,
+        menu: updatedItem,
+        message: "Menu edited successfully",
+      });
     } catch (err) {
       res.status(500).json({ error: err.message });
       console.log(err);
