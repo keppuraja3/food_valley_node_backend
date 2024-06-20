@@ -9,6 +9,9 @@ router.post("/menu", uploader.single("menuimage"), MenuController.addNewMenu);
 // View all items
 router.get("/menu", MenuController.viewMenuItems);
 
+// View one items
+router.get("/menu/:id", MenuController.viewMenu);
+
 // Update item
 router.put(
   "/menu/:id",

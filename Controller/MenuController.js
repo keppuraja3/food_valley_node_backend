@@ -53,6 +53,22 @@ exports.viewMenuItems = [
   },
 ];
 
+// View one menu item
+
+exports.viewMenu = [
+  async (req, res) => {
+    const id = req.params.id;
+    try {
+      const menu = await Menu.findById({ _id: id });
+      if (menu) {
+        return res.status(201).json({ status: true, menu: menu });
+      }
+    } catch (err) {
+      return res.status(201).json({ error: err.message });
+    }
+  },
+];
+
 // Update menu items
 exports.updateMenuItem = [
   async (req, res) => {
