@@ -29,7 +29,7 @@ app.use(cookieParser())
 app.use("/uploads", express.static(path.join(__dirname,'uploads')))
 app.use(cors(
     {
-        origin: process.env.CLIENT_SIDE_URL,
+        origin: "*",
         methods:["POST","GET","PUT","DELETE"],
         allowedHeaders: "Content-Type"
     }
